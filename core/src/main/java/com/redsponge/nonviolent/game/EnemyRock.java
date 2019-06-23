@@ -30,6 +30,7 @@ public class EnemyRock extends Enemy {
             @Override
             public void run() {
                 vel.set(0, 0);
+                System.out.println("COLLISION OF ROCK!!!!");
             }
         };
 
