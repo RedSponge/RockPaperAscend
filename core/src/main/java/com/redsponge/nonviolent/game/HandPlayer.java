@@ -14,6 +14,7 @@ public class HandPlayer extends PActor implements IUpdated, IAttackable {
 
     private GameInput input;
     private Rectangle representation;
+    public boolean dead;
 
     public HandPlayer(PhysicsWorld worldIn) {
         super(worldIn);
@@ -37,6 +38,7 @@ public class HandPlayer extends PActor implements IUpdated, IAttackable {
 
         if(attackRange.overlaps(representation)) {
             Logger.log(this, "Attacked! Damage:", damage);
+            dead = true;
             return true;
         }
 

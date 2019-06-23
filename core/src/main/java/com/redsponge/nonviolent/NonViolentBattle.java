@@ -11,6 +11,8 @@ import java.util.function.BiConsumer;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class NonViolentBattle extends EngineGame {
 
+    public static NonViolentBattle instance;
+
     public NonViolentBattle(boolean desktop, BiConsumer<Integer, Integer> desktopMoveAction) {
         super(desktop, desktopMoveAction);
     }
@@ -18,6 +20,7 @@ public class NonViolentBattle extends EngineGame {
     @Override
     public void init() {
 //        setScreen(new SplashScreenScreen(ga, new GameScreen(ga), TransitionTemplates.sineSlide(1)));
+        instance = this;
         setScreen(new GameScreen(ga));
     }
 }
