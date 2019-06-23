@@ -1,27 +1,26 @@
 package com.redsponge.nonviolent.game;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.redsponge.nonviolent.game.ai.IAttackable;
 import com.redsponge.nonviolent.input.GameInput;
+import com.redsponge.redengine.input.InputTranslator;
+import com.redsponge.redengine.input.SimpleInputTranslator;
 import com.redsponge.redengine.physics.IUpdated;
 import com.redsponge.redengine.physics.PActor;
 import com.redsponge.redengine.physics.PhysicsWorld;
 import com.redsponge.redengine.utils.Logger;
-import com.redsponge.redengine.utils.MathUtilities;
 
-public class HandPlayer extends PActor implements IUpdated, IAttackable {
+public class Player extends PActor implements IUpdated {
 
-    private GameInput input;
+    private InputTranslator input;
     private Rectangle representation;
     public boolean dead;
 
-    public HandPlayer(PhysicsWorld worldIn) {
+    public Player(PhysicsWorld worldIn) {
         super(worldIn);
         pos.set(100, 100);
         size.set(30, 30);
 
-        input = new GameInput();
+        input = new SimpleInputTranslator();
         representation = new Rectangle(pos.x, pos.y, size.x, size.y);
     }
 
@@ -32,7 +31,6 @@ public class HandPlayer extends PActor implements IUpdated, IAttackable {
         moveY(input.getVertical() * speed * delta, null);
     }
 
-    @Override
     public boolean attack(Rectangle attackRange, float damage) {
         updateRepresentation();
 
@@ -47,5 +45,10 @@ public class HandPlayer extends PActor implements IUpdated, IAttackable {
 
     private void updateRepresentation() {
         representation.set(pos.x, pos.y, size.x, size.y);
+    }
+
+    public Rectangle getRepresentation() {
+        updateRepresentation();
+        return representation;
     }
 }

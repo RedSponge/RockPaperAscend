@@ -14,9 +14,9 @@ public class StoneBullet extends PActor implements IUpdated {
     private Vector2 vel;
     private float timeLeft;
     private float speed;
-    private HandPlayer player;
+    private Player player;
 
-    public StoneBullet(PhysicsWorld worldIn, IntVector2 pos, Vector2 vel, HandPlayer player) {
+    public StoneBullet(PhysicsWorld worldIn, IntVector2 pos, Vector2 vel, Player player) {
         super(worldIn);
         this.vel = vel;
         this.player = player;
@@ -30,8 +30,15 @@ public class StoneBullet extends PActor implements IUpdated {
 
     @Override
     public void update(float delta) {
-        moveX(vel.x * speed * delta, null);
-        moveY(vel.y * speed * delta, null);
+        Runnable remove = new Runnable() {
+            @Override
+            public void run() {
+                remove();
+            }
+        };
+
+        moveX(vel.x * speed * delta, remove);
+        moveY(vel.y * speed * delta, remove);
 
         timeLeft -= delta;
         if(timeLeft <= 0) {
@@ -42,8 +49,8 @@ public class StoneBullet extends PActor implements IUpdated {
     }
 
     private void checkIfKilled() {
-        for (Enemy enemy : ((RPSWorld) worldIn).getEnemies()) {
-            if(MathUtilities.rectanglesIntersect(pos, size, enemy.pos, enemy.size) && enemy.getType() == MoveType.SCISSORS) {
+        for (Enemy enemy : ((RPSWorld) worldIn).getScissors()) {
+            if(MathUtilities.rectanglesIntersect(pos, size, enemy.pos, enemy.size)) {
                 Logger.log(this, "Removed Scissors!");
                 enemy.remove();
                 this.remove();
@@ -52,7 +59,7 @@ public class StoneBullet extends PActor implements IUpdated {
         }
 
         if(MathUtilities.rectanglesIntersect(pos, size, player.pos, player.size)) {
-            Logger.log(this, "Removed Scissors!");
+            Logger.log(this, "Removed Player!");
             player.attack(new Rectangle(pos.x, pos.y, size.x, size.y), 100);
             this.remove();
         }

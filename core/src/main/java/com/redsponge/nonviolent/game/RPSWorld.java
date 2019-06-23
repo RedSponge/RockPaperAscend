@@ -26,16 +26,14 @@ public class RPSWorld extends PhysicsWorld {
         super.addActor(actor);
         if(actor instanceof Enemy) {
             enemies.add((Enemy) actor);
-            switch (((Enemy) actor).getType()) {
-                case ROCK:
-                    rocks.add((Enemy) actor);
-                    break;
-                case PAPER:
-                    papers.add((Enemy) actor);
-                    break;
-                case SCISSORS:
-                    scissors.add((Enemy) actor);
-                    break;
+            Enemy enemy = (Enemy) actor;
+
+            if(enemy instanceof EnemyRock) {
+                rocks.add(enemy);
+            } else if(enemy instanceof EnemyPaper) {
+                papers.add(enemy);
+            } else if(enemy instanceof EnemyScissors) {
+                scissors.add(enemy);
             }
 
         } else if(actor instanceof StoneBullet) {
@@ -50,16 +48,12 @@ public class RPSWorld extends PhysicsWorld {
         for (Enemy enemy : enemies) {
             if(enemy.isRemoved()) {
                 enemies.removeValue(enemy, true);
-                switch (enemy.getType()) {
-                    case ROCK:
-                        rocks.removeValue(enemy, true);
-                        break;
-                    case PAPER:
-                        papers.removeValue(enemy, true);
-                        break;
-                    case SCISSORS:
-                        scissors.removeValue(enemy, true);
-                        break;
+                if(enemy instanceof EnemyRock) {
+                    rocks.removeValue(enemy, true);
+                } else if(enemy instanceof EnemyPaper) {
+                    papers.removeValue(enemy, true);
+                } else if(enemy instanceof EnemyScissors) {
+                    scissors.removeValue(enemy, true);
                 }
             }
         }
@@ -85,14 +79,14 @@ public class RPSWorld extends PhysicsWorld {
         return scissors;
     }
 
-    public DelayedRemovalArray<Enemy> getBeaten(MoveType type) {
+    public DelayedRemovalArray<Enemy> getByType(MoveType type) {
         switch (type) {
             case ROCK:
-                return scissors;
-            case PAPER:
                 return rocks;
-            case SCISSORS:
+            case PAPER:
                 return papers;
+            case SCISSORS:
+                return scissors;
         }
         return null;
     }

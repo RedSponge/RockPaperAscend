@@ -1,18 +1,17 @@
 package com.redsponge.nonviolent.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.redsponge.nonviolent.Constants;
 import com.redsponge.nonviolent.NonViolentBattle;
 import com.redsponge.nonviolent.Utils;
-import com.redsponge.redengine.desktop.DesktopUtil;
-import com.redsponge.redengine.physics.PSolid;
 import com.redsponge.redengine.physics.PhysicsDebugRenderer;
-import com.redsponge.redengine.physics.PhysicsWorld;
-import com.redsponge.redengine.save.Player;
 import com.redsponge.redengine.screen.AbstractScreen;
 import com.redsponge.redengine.utils.GameAccessor;
 import com.redsponge.redengine.utils.GeneralUtils;
@@ -20,7 +19,7 @@ import com.redsponge.redengine.utils.IntVector2;
 
 public class GameScreen extends AbstractScreen {
 
-    private HandPlayer player;
+    private Player player;
     private RPSWorld world;
     private PhysicsDebugRenderer pdr;
 
@@ -47,7 +46,8 @@ public class GameScreen extends AbstractScreen {
         viewport.apply(true);
 
         world = new RPSWorld();
-        player = new HandPlayer(world);
+        player = new Player(world);
+        player.pos.set((int) viewport.getWorldWidth() / 2, (int) viewport.getWorldHeight() / 2);
         world.addActor(player);
 
         world.addSolid(new Wall(world, 0, 0, 1, (int) viewport.getWorldHeight()));
@@ -66,7 +66,7 @@ public class GameScreen extends AbstractScreen {
         timeUntilSpawn -= delta;
         if(timeUntilSpawn <= 0) {
             IntVector2 spawn = getSpawnPosition();
-            world.addActor(new Enemy(world, getBestSpawnChoice(), player, spawn.x, spawn.y));
+            world.addActor(getBestSpawnChoice().create(world, player, spawn.x, spawn.y));
             timeUntilSpawn = 2;
         }
 
@@ -100,6 +100,12 @@ public class GameScreen extends AbstractScreen {
         if(numRocks > 0 && numSciss < 3) {
             scissChance += 30;
         }
+        if(numSciss > 10 && numRocks < 4) {
+            rockChance += 40;
+        }
+        if(numRocks > 6 && numPaper < 1) {
+            paperChance += 80;
+        }
 
         return Utils.getByChance(MoveType.values(), new int[] {rockChance, paperChance, scissChance});
     }
@@ -109,8 +115,22 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        ((OrthographicCamera)viewport.getCamera()).zoom = 0.9f;
+        viewport.getCamera().position.lerp(new Vector3(player.pos.x, player.pos.y, 0), 0.1f);
         viewport.apply();
         pdr.render(world, viewport.getCamera().combined);
+
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+
+        shapeRenderer.begin(ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        for (Enemy paper : world.getPapers()) {
+            Rectangle attack = paper.getAttackRectangle();
+            if(attack != null) {
+                shapeRenderer.rect(attack.x, attack.y, attack.width, attack.height);
+            }
+        }
+        shapeRenderer.end();
     }
 
     @Override
