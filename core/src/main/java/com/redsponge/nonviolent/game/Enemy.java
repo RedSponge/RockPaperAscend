@@ -1,5 +1,6 @@
 package com.redsponge.nonviolent.game;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.redsponge.redengine.physics.IUpdated;
 import com.redsponge.redengine.physics.PActor;
@@ -39,6 +40,7 @@ public abstract class Enemy extends PActor implements IUpdated {
         }
     }
 
+    public abstract void render(SpriteBatch batch);
 
     @Override
     public void remove() {

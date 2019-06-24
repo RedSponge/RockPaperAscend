@@ -1,5 +1,8 @@
 package com.redsponge.nonviolent.game;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.redsponge.redengine.physics.IUpdated;
@@ -63,5 +66,13 @@ public class StoneBullet extends PActor implements IUpdated {
             player.attack(new Rectangle(pos.x, pos.y, size.x, size.y), 100);
             this.remove();
         }
+    }
+
+    public void render(SpriteBatch batch) {
+        TextureRegion sprite = GameScreen.stoneBulletTexture;
+        float w = sprite.getRegionWidth();
+        float h = sprite.getRegionHeight();
+        float angle = MathUtils.atan2(vel.y, vel.x) * MathUtils.radDeg;
+        batch.draw(sprite, pos.x - w / 2 + size.x / 2f, pos.y - h / 2 + size.y / 2f, w / 2, h / 2, w, h, 1, 1, angle - 90);
     }
 }

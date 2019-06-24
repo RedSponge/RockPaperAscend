@@ -1,0 +1,122 @@
+
+textures.png
+size: 64,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+player
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+
+textures2.png
+size: 256,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemy/paper/run
+  rotate: false
+  xy: 2, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 1
+enemy/paper/run
+  rotate: false
+  xy: 57, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 2
+enemy/paper/run
+  rotate: false
+  xy: 112, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 3
+enemy/paper/run
+  rotate: false
+  xy: 167, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 4
+
+textures3.png
+size: 128,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemy/rock/bullet
+  rotate: false
+  xy: 37, 11
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+enemy/rock/run
+  rotate: false
+  xy: 2, 33
+  size: 33, 29
+  orig: 33, 29
+  offset: 0, 0
+  index: 1
+enemy/rock/run
+  rotate: false
+  xy: 2, 33
+  size: 33, 29
+  orig: 33, 29
+  offset: 0, 0
+  index: 3
+enemy/rock/run
+  rotate: false
+  xy: 2, 2
+  size: 33, 29
+  orig: 33, 29
+  offset: 0, 0
+  index: 2
+enemy/rock/run
+  rotate: false
+  xy: 37, 33
+  size: 33, 29
+  orig: 33, 29
+  offset: 0, 0
+  index: 4
+
+textures4.png
+size: 128,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemy/scissors/run
+  rotate: false
+  xy: 2, 2
+  size: 29, 40
+  orig: 29, 40
+  offset: 0, 0
+  index: 1
+enemy/scissors/run
+  rotate: false
+  xy: 33, 2
+  size: 29, 40
+  orig: 29, 40
+  offset: 0, 0
+  index: 2
+enemy/scissors/run
+  rotate: false
+  xy: 64, 2
+  size: 29, 40
+  orig: 29, 40
+  offset: 0, 0
+  index: 3
+enemy/scissors/run
+  rotate: false
+  xy: 95, 2
+  size: 29, 40
+  orig: 29, 40
+  offset: 0, 0
+  index: 4

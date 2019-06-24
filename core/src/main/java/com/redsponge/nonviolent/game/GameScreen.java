@@ -5,14 +5,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.redsponge.betteranimations.AnimationManager;
+import com.redsponge.betteranimations.AnimationParser;
 import com.redsponge.nonviolent.Constants;
 import com.redsponge.nonviolent.NonViolentBattle;
 import com.redsponge.nonviolent.Utils;
 import com.redsponge.redengine.assets.Asset;
+import com.redsponge.redengine.desktop.DesktopUtil;
 import com.redsponge.redengine.physics.PhysicsDebugRenderer;
 import com.redsponge.redengine.screen.AbstractScreen;
 import com.redsponge.redengine.utils.GameAccessor;
@@ -33,6 +40,16 @@ public class GameScreen extends AbstractScreen {
     @Asset(path = "grass_background.png")
     private Texture grassBackground;
 
+    @Asset(path = "textures/textures.atlas")
+    private TextureAtlas gameTextures;
+
+    public static Animation<TextureRegion> scissorsAnimation;
+    public static Animation<TextureRegion> paperAnimation;
+    public static Animation<TextureRegion> rockAnimation;
+
+    public static TextureRegion stoneBulletTexture;
+    public static TextureRegion playerIcon;
+
     public static final IntVector2[] SPAWN_POSITIONS = {
         new IntVector2(50, 50),
         new IntVector2(50, Constants.GAME_HEIGHT - 50),
@@ -47,6 +64,8 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
+        loadAnimations();
+
         viewport = new FitViewport(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
         viewport.apply(true);
 
@@ -63,6 +82,14 @@ public class GameScreen extends AbstractScreen {
         pdr = new PhysicsDebugRenderer();
         temp = new Vector3();
         timeUntilSpawn = 2;
+    }
+
+    private void loadAnimations() {
+        scissorsAnimation = Utils.parseAnimation(gameTextures, "enemy/scissors/run", 1, 4, 0.1f, PlayMode.LOOP);
+        rockAnimation = Utils.parseAnimation(gameTextures, "enemy/rock/run", 1, 4,0.25f, PlayMode.LOOP);
+        paperAnimation = Utils.parseAnimation(gameTextures, "enemy/paper/run", 1, 4, 0.1f, PlayMode.LOOP);
+        stoneBulletTexture = gameTextures.findRegion("enemy/rock/bullet");
+        playerIcon = gameTextures.findRegion("player");
     }
 
     @Override
@@ -123,7 +150,7 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float zoom = 0.7f;
+        float zoom = 0.6f;
         ((OrthographicCamera)viewport.getCamera()).zoom = zoom;
         Vector3 camPos = viewport.getCamera().position;
         camPos.lerp(new Vector3(player.pos.x, player.pos.y, 0), 0.1f);
@@ -149,9 +176,16 @@ public class GameScreen extends AbstractScreen {
 
         batch.begin();
         batch.draw(grassBackground, 0,0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        for (Enemy enemy : world.getEnemies()) {
+            enemy.render(batch);
+        }
+        for (StoneBullet bullet : world.getBullets()) {
+            bullet.render(batch);
+        }
+        player.render(batch);
         batch.end();
 
-        pdr.render(world, viewport.getCamera().combined);
+//        pdr.render(world, viewport.getCamera().combined);
 
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 

@@ -1,7 +1,11 @@
 package com.redsponge.nonviolent.game;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.redsponge.nonviolent.input.GameInput;
+import com.redsponge.redengine.assets.IAssetRequirer;
 import com.redsponge.redengine.input.InputTranslator;
 import com.redsponge.redengine.input.SimpleInputTranslator;
 import com.redsponge.redengine.physics.IUpdated;
@@ -41,6 +45,13 @@ public class Player extends PActor implements IUpdated {
         }
 
         return false;
+    }
+
+    public void render(SpriteBatch batch) {
+        TextureRegion frame = GameScreen.playerIcon;
+        float w = frame.getRegionWidth() * 2;
+        float h = frame.getRegionHeight() * 2;
+        batch.draw(frame, pos.x - w / 2 + size.x / 2f, pos.y - h / 2 + size.y / 2f, w, h);
     }
 
     private void updateRepresentation() {

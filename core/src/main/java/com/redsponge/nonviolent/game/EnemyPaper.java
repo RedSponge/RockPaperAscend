@@ -1,5 +1,7 @@
 package com.redsponge.nonviolent.game;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.redsponge.redengine.physics.PhysicsWorld;
@@ -15,6 +17,7 @@ public class EnemyPaper extends Enemy {
     private Vector2 vel;
     private Vector2 self;
     private Vector2 playerVec;
+    private float timeAlive;
 
     public EnemyPaper(PhysicsWorld worldIn, Player player, int x, int y, float speed, int range) {
         super(worldIn, player, x, y, speed);
@@ -27,10 +30,12 @@ public class EnemyPaper extends Enemy {
         playerVec = new Vector2();
 
         size.set(30, 30);
+        timeAlive = 0;
     }
 
     @Override
     public void update(float delta) {
+        timeAlive += delta;
         self.set(pos.x, pos.y);
         playerVec.set(player.pos.x, player.pos.y);
 
@@ -72,6 +77,14 @@ public class EnemyPaper extends Enemy {
         timeSinceAttack = 0;
         timeUntilAttack = 5;
         System.out.println("ATTACK!");
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        TextureRegion frame = GameScreen.paperAnimation.getKeyFrame(timeAlive);
+        float w = frame.getRegionWidth() * 2;
+        float h = frame.getRegionHeight() * 2;
+        batch.draw(frame, pos.x - w / 2 + size.x / 2f, (float) (pos.y - h / 2 + size.y / 2f + Math.sin(timeAlive * 5) * 20), w, h);
     }
 
     private boolean inRange() {

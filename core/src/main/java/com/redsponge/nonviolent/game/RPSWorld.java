@@ -57,6 +57,12 @@ public class RPSWorld extends PhysicsWorld {
                 }
             }
         }
+
+        for (StoneBullet bullet : bullets) {
+            if(bullet.isRemoved()) {
+                bullets.removeValue(bullet, true);
+            }
+        }
     }
 
     public DelayedRemovalArray<Enemy> getEnemies() {

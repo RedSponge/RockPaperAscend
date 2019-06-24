@@ -1,7 +1,12 @@
 package com.redsponge.nonviolent;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.redsponge.redengine.utils.MathUtilities;
 
 public class Utils {
@@ -43,6 +48,14 @@ public class Utils {
         float vy = -MathUtils.sin(angle);
 
         return new Vector2(vx, vy);
+    }
+
+    public static Animation<TextureRegion> parseAnimation(TextureAtlas atlas, String name, int start, int end, float dur, PlayMode playMode) {
+        TextureRegion[] frames = new TextureRegion[end - start + 1];
+        for (int i = start; i <= end; i++) {
+            frames[i - start] = atlas.findRegion(name, i);
+        }
+        return new Animation<TextureRegion>(dur, new Array<TextureRegion>(frames), playMode);
     }
 
 }

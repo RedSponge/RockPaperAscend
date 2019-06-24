@@ -2,6 +2,7 @@ package com.redsponge.nonviolent;
 
 import com.redsponge.nonviolent.game.GameScreen;
 import com.redsponge.redengine.EngineGame;
+import com.redsponge.redengine.desktop.DesktopUtil;
 import com.redsponge.redengine.screen.DefaultScreen;
 import com.redsponge.redengine.screen.SplashScreenScreen;
 import com.redsponge.redengine.transitions.TransitionTemplates;
