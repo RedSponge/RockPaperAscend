@@ -1,27 +1,29 @@
 package com.redsponge.nonviolent.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.redsponge.betteranimations.AnimationManager;
-import com.redsponge.betteranimations.AnimationParser;
 import com.redsponge.nonviolent.Constants;
-import com.redsponge.nonviolent.NonViolentBattle;
 import com.redsponge.nonviolent.Utils;
 import com.redsponge.redengine.assets.Asset;
-import com.redsponge.redengine.desktop.DesktopUtil;
 import com.redsponge.redengine.physics.PhysicsDebugRenderer;
 import com.redsponge.redengine.screen.AbstractScreen;
+import com.redsponge.redengine.transitions.TransitionTemplates;
 import com.redsponge.redengine.utils.GameAccessor;
 import com.redsponge.redengine.utils.GeneralUtils;
 import com.redsponge.redengine.utils.IntVector2;
@@ -46,9 +48,19 @@ public class GameScreen extends AbstractScreen {
     public static Animation<TextureRegion> scissorsAnimation;
     public static Animation<TextureRegion> paperAnimation;
     public static Animation<TextureRegion> rockAnimation;
+    public static Animation<TextureRegion> paperAttackAnimation;
+
+    @Asset(path = "particles/particles.atlas")
+    private TextureAtlas particleTextures;
+    private ParticleEffect paperSplash;
+    public static ParticleEffectPool paperSplashPool;
 
     public static TextureRegion stoneBulletTexture;
     public static TextureRegion playerIcon;
+
+    public static DelayedRemovalArray<PooledEffect> runningEffects = new DelayedRemovalArray<PooledEffect>();
+
+    private boolean transitioned;
 
     public static final IntVector2[] SPAWN_POSITIONS = {
         new IntVector2(50, 50),
@@ -82,12 +94,18 @@ public class GameScreen extends AbstractScreen {
         pdr = new PhysicsDebugRenderer();
         temp = new Vector3();
         timeUntilSpawn = 2;
+
+        paperSplash = new ParticleEffect();
+        paperSplash.load(Gdx.files.internal("particles/paper_explosion.p"), particleTextures);
+        paperSplashPool = new ParticleEffectPool(paperSplash, 20, 100);
+        transitioned = true;
     }
 
     private void loadAnimations() {
         scissorsAnimation = Utils.parseAnimation(gameTextures, "enemy/scissors/run", 1, 4, 0.1f, PlayMode.LOOP);
         rockAnimation = Utils.parseAnimation(gameTextures, "enemy/rock/run", 1, 4,0.25f, PlayMode.LOOP);
         paperAnimation = Utils.parseAnimation(gameTextures, "enemy/paper/run", 1, 4, 0.1f, PlayMode.LOOP);
+        paperAttackAnimation = Utils.parseAnimation(gameTextures, "enemy/paper/attack", 1, 7, 0.1f, PlayMode.LOOP);
         stoneBulletTexture = gameTextures.findRegion("enemy/rock/bullet");
         playerIcon = gameTextures.findRegion("player");
     }
@@ -102,8 +120,17 @@ public class GameScreen extends AbstractScreen {
             timeUntilSpawn = 2;
         }
 
-        if(player.dead) {
-            NonViolentBattle.instance.setScreen(new GameScreen(ga));
+        for (PooledEffect runningEffect : runningEffects) {
+            runningEffect.update(delta);
+            if(runningEffect.isComplete()) {
+                runningEffect.free();
+                runningEffects.removeValue(runningEffect, true);
+            }
+        }
+
+        if((player.dead || Gdx.input.isKeyPressed(Keys.ESCAPE)) && transitioned) {
+            ga.transitionTo(new GameScreen(ga), TransitionTemplates.linearFade(1));
+            transitioned = false;
         }
     }
 
@@ -142,6 +169,8 @@ public class GameScreen extends AbstractScreen {
             scissChance -= 80;
         }
 
+        paperChance = 23973423;
+
         return Utils.getByChance(MoveType.values(), new int[] {rockChance, paperChance, scissChance});
     }
 
@@ -150,7 +179,7 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float zoom = 0.6f;
+        float zoom = 1;/*0.6f;*/
         ((OrthographicCamera)viewport.getCamera()).zoom = zoom;
         Vector3 camPos = viewport.getCamera().position;
         camPos.lerp(new Vector3(player.pos.x, player.pos.y, 0), 0.1f);
@@ -183,6 +212,9 @@ public class GameScreen extends AbstractScreen {
             bullet.render(batch);
         }
         player.render(batch);
+        for (PooledEffect runningEffect : runningEffects) {
+            runningEffect.draw(batch);
+        }
         batch.end();
 
 //        pdr.render(world, viewport.getCamera().combined);
@@ -206,4 +238,14 @@ public class GameScreen extends AbstractScreen {
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
+
+    @Override
+    public void dispose() {
+        paperSplash.dispose();
+        for (PooledEffect runningEffect : runningEffects) {
+            runningEffect.free();
+        }
+        runningEffects.clear();
+    }
 }
+                                                                                                                                                                                                                          

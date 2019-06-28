@@ -34,7 +34,7 @@ public class EnemyRock extends Enemy {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                vel.set(0, 0);
+                target.set(0, 0);
                 System.out.println("COLLISION OF ROCK!!!!");
             }
         };

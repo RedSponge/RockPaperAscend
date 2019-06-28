@@ -11,7 +11,7 @@ public enum MoveType {
     PAPER(2) {
         @Override
         public Enemy create(RPSWorld world, Player player, int x, int y) {
-            return new EnemyPaper(world, player, x, y, 50, 150);
+            return new EnemyPaper(world, player, x, y, 50, 100);
         }
     },
     SCISSORS(0) {

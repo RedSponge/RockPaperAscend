@@ -13,34 +13,83 @@ player
   index: -1
 
 textures2.png
-size: 256,64
+size: 512,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-enemy/paper/run
+enemy/paper/attack
   rotate: false
   xy: 2, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 1
-enemy/paper/run
+enemy/paper/attack
   rotate: false
   xy: 57, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 2
-enemy/paper/run
+enemy/paper/attack
   rotate: false
   xy: 112, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 3
-enemy/paper/run
+enemy/paper/attack
   rotate: false
   xy: 167, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 4
+enemy/paper/attack
+  rotate: false
+  xy: 167, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 6
+enemy/paper/attack
+  rotate: false
+  xy: 222, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 5
+enemy/paper/attack
+  rotate: false
+  xy: 222, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 7
+enemy/paper/run
+  rotate: false
+  xy: 277, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 1
+enemy/paper/run
+  rotate: false
+  xy: 332, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 2
+enemy/paper/run
+  rotate: false
+  xy: 387, 2
+  size: 53, 42
+  orig: 53, 42
+  offset: 0, 0
+  index: 3
+enemy/paper/run
+  rotate: false
+  xy: 442, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
