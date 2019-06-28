@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.redsponge.nonviolent.Utils;
 import com.redsponge.redengine.physics.PhysicsWorld;
+import com.redsponge.redengine.utils.GeneralUtils;
 
 public class EnemyPaper extends Enemy {
 
@@ -70,7 +72,7 @@ public class EnemyPaper extends Enemy {
                     effect.start();
                     GameScreen.runningEffects.add(effect);
                     spawnedParticles = true;
-                    GameScreen.paperAttackSoundS.play(1, MathUtils.random(0.75f, 1.25f), 0);
+                    Utils.playSoundRandomlyPitched(GameScreen.paperAttackSoundS);
                 }
                 if (attackRectangle == null && timeSinceAttack >= 0.45f) {
                     spawnAttack();

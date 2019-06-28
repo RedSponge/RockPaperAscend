@@ -49,6 +49,7 @@ public class EnemyRock extends Enemy {
         if(timeUntilAttack <= 0) {
             shootStone();
             timeUntilAttack = 3;
+            Utils.playSoundRandomlyPitched(GameScreen.rockAttackSoundS);
         }
 
         tryKill(MoveType.SCISSORS);

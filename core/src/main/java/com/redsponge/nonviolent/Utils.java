@@ -1,5 +1,6 @@
 package com.redsponge.nonviolent;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -58,4 +59,7 @@ public class Utils {
         return new Animation<TextureRegion>(dur, new Array<TextureRegion>(frames), playMode);
     }
 
+    public static void playSoundRandomlyPitched(Sound sound) {
+        sound.play(1, MathUtils.random(0.75f, 1.25f), 0);
+    }
 }

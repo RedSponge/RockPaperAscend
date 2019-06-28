@@ -2,6 +2,7 @@ package com.redsponge.nonviolent.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -52,7 +53,22 @@ public class GameScreen extends AbstractScreen {
 
     @Asset(path = "particles/particles.atlas")
     private TextureAtlas particleTextures;
+
+    @Asset(path = "sounds/paper_attack.wav")
+    private Sound paperAttackSound;
+    public static Sound paperAttackSoundS;
+
+    @Asset(path = "sounds/rock_attack.wav")
+    private Sound rockAttackSound;
+    public static Sound rockAttackSoundS;
+
+    @Asset(path = "sounds/scissors_attack.wav")
+    private Sound scissorsAttackSound;
+    public static Sound scissorsAttackSoundS;
+
+
     private ParticleEffect paperSplash;
+
     public static ParticleEffectPool paperSplashPool;
 
     public static TextureRegion stoneBulletTexture;
@@ -99,6 +115,10 @@ public class GameScreen extends AbstractScreen {
         paperSplash.load(Gdx.files.internal("particles/paper_explosion.p"), particleTextures);
         paperSplashPool = new ParticleEffectPool(paperSplash, 20, 100);
         transitioned = true;
+
+        paperAttackSoundS = paperAttackSound;
+        rockAttackSoundS = rockAttackSound;
+        scissorsAttackSoundS = scissorsAttackSound;
     }
 
     private void loadAnimations() {
@@ -169,8 +189,6 @@ public class GameScreen extends AbstractScreen {
             scissChance -= 80;
         }
 
-        paperChance = 23973423;
-
         return Utils.getByChance(MoveType.values(), new int[] {rockChance, paperChance, scissChance});
     }
 
@@ -179,7 +197,7 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float zoom = 1;/*0.6f;*/
+        float zoom = 0.6f;
         ((OrthographicCamera)viewport.getCamera()).zoom = zoom;
         Vector3 camPos = viewport.getCamera().position;
         camPos.lerp(new Vector3(player.pos.x, player.pos.y, 0), 0.1f);
@@ -248,4 +266,3 @@ public class GameScreen extends AbstractScreen {
         runningEffects.clear();
     }
 }
-                                                                                                                                                                                                                          
