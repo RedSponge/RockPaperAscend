@@ -1,5 +1,7 @@
 package com.redsponge.nonviolent.game;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -43,7 +45,7 @@ public class EnemyPaper extends Enemy {
     }
 
     @Override
-    public void update(float delta) {
+    public void additionalUpdate(float delta) {
         timeAlive += delta;
         self.set(pos.x, pos.y);
         playerVec.set(player.pos.x, player.pos.y);
@@ -114,7 +116,7 @@ public class EnemyPaper extends Enemy {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void additionalRender(SpriteBatch batch) {
         TextureRegion frame;
         if (inAttack) {
             frame = GameScreen.paperAttackAnimation.getKeyFrame(timeSinceAttack);
@@ -125,6 +127,7 @@ public class EnemyPaper extends Enemy {
             float w = frame.getRegionWidth() * 2;
             float h = frame.getRegionHeight() * 2;
             batch.draw(frame, pos.x - w / 2 + size.x / 2f, (float) (pos.y - h / 2 + size.y / 2f + Math.sin(timeAlive * 5) * 20), w, h);
+            innerLight.getPosition().set(pos.x + size.x / 2, (float) (pos.y + size.y / 2 + Math.sin(timeAlive * 5) * 20));
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -137,5 +140,15 @@ public class EnemyPaper extends Enemy {
     @Override
     public Rectangle getAttackRectangle() {
         return attackRectangle;
+    }
+
+    @Override
+    public Color getRepresentingColor() {
+        return Color.CYAN;
+    }
+
+    @Override
+    public Animation<TextureRegion> getAscendAnimation() {
+        return GameScreen.paperAscend;
     }
 }

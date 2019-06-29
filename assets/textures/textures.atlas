@@ -1,171 +1,429 @@
 
 textures.png
-size: 64,64
+size: 128,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-player
+ascended_soul
   rotate: false
-  xy: 2, 2
+  xy: 2, 20
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: 1
+ascended_soul
+  rotate: false
+  xy: 36, 20
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+ascended_soul
+  rotate: false
+  xy: 70, 20
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+ascended_soul_icon
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
 
 textures2.png
-size: 512,64
+size: 1024,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-enemy/paper/attack
+enemy/paper/ascend
   rotate: false
   xy: 2, 2
+  size: 63, 42
+  orig: 63, 42
+  offset: 0, 0
+  index: 1
+enemy/paper/ascend
+  rotate: false
+  xy: 67, 2
+  size: 63, 42
+  orig: 63, 42
+  offset: 0, 0
+  index: 2
+enemy/paper/ascend
+  rotate: false
+  xy: 132, 2
+  size: 63, 42
+  orig: 63, 42
+  offset: 0, 0
+  index: 3
+enemy/paper/ascend
+  rotate: false
+  xy: 197, 2
+  size: 63, 42
+  orig: 63, 42
+  offset: 0, 0
+  index: 4
+enemy/paper/ascend
+  rotate: false
+  xy: 262, 2
+  size: 63, 42
+  orig: 63, 42
+  offset: 0, 0
+  index: 5
+enemy/paper/attack
+  rotate: false
+  xy: 327, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 1
 enemy/paper/attack
   rotate: false
-  xy: 57, 2
+  xy: 382, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 2
 enemy/paper/attack
   rotate: false
-  xy: 112, 2
+  xy: 437, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 3
 enemy/paper/attack
   rotate: false
-  xy: 167, 2
+  xy: 492, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 4
 enemy/paper/attack
   rotate: false
-  xy: 167, 2
+  xy: 492, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 6
 enemy/paper/attack
   rotate: false
-  xy: 222, 2
+  xy: 547, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 5
 enemy/paper/attack
   rotate: false
-  xy: 222, 2
+  xy: 547, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 7
 enemy/paper/run
   rotate: false
-  xy: 277, 2
+  xy: 602, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 1
 enemy/paper/run
   rotate: false
-  xy: 332, 2
+  xy: 657, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 2
 enemy/paper/run
   rotate: false
-  xy: 387, 2
+  xy: 712, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 3
 enemy/paper/run
   rotate: false
-  xy: 442, 2
+  xy: 767, 2
   size: 53, 42
   orig: 53, 42
   offset: 0, 0
   index: 4
 
 textures3.png
-size: 128,64
+size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+enemy/rock/ascend
+  rotate: false
+  xy: 2, 33
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: 1
+enemy/rock/ascend
+  rotate: false
+  xy: 2, 2
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: 2
+enemy/rock/ascend
+  rotate: false
+  xy: 47, 33
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: 3
+enemy/rock/ascend
+  rotate: false
+  xy: 47, 2
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: 4
+enemy/rock/ascend
+  rotate: false
+  xy: 92, 33
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: 5
 enemy/rock/bullet
   rotate: false
-  xy: 37, 11
+  xy: 172, 42
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 enemy/rock/run
   rotate: false
-  xy: 2, 33
+  xy: 92, 2
   size: 33, 29
   orig: 33, 29
   offset: 0, 0
   index: 1
 enemy/rock/run
   rotate: false
-  xy: 2, 33
+  xy: 92, 2
   size: 33, 29
   orig: 33, 29
   offset: 0, 0
   index: 3
 enemy/rock/run
   rotate: false
-  xy: 2, 2
+  xy: 127, 2
   size: 33, 29
   orig: 33, 29
   offset: 0, 0
   index: 2
 enemy/rock/run
   rotate: false
-  xy: 37, 33
+  xy: 137, 33
   size: 33, 29
   orig: 33, 29
   offset: 0, 0
   index: 4
 
 textures4.png
-size: 128,64
+size: 512,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-enemy/scissors/run
+enemy/scissors/ascend
   rotate: false
   xy: 2, 2
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: 1
+enemy/scissors/ascend
+  rotate: false
+  xy: 43, 2
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: 2
+enemy/scissors/ascend
+  rotate: false
+  xy: 84, 2
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: 3
+enemy/scissors/ascend
+  rotate: false
+  xy: 125, 2
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: 4
+enemy/scissors/ascend
+  rotate: false
+  xy: 166, 2
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: 5
+enemy/scissors/run
+  rotate: false
+  xy: 207, 2
   size: 29, 40
   orig: 29, 40
   offset: 0, 0
   index: 1
 enemy/scissors/run
   rotate: false
-  xy: 33, 2
+  xy: 238, 2
   size: 29, 40
   orig: 29, 40
   offset: 0, 0
   index: 2
 enemy/scissors/run
   rotate: false
-  xy: 64, 2
+  xy: 269, 2
   size: 29, 40
   orig: 29, 40
   offset: 0, 0
   index: 3
 enemy/scissors/run
   rotate: false
-  xy: 95, 2
+  xy: 300, 2
   size: 29, 40
   orig: 29, 40
   offset: 0, 0
   index: 4
+
+textures5.png
+size: 512,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+player/ascend
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/ascend_start
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/ascend
+  rotate: false
+  xy: 36, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/ascend
+  rotate: false
+  xy: 70, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/ascend
+  rotate: false
+  xy: 104, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/ascend_start
+  rotate: false
+  xy: 138, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/ascend_start
+  rotate: false
+  xy: 172, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/ascend_start
+  rotate: false
+  xy: 206, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/idle
+  rotate: false
+  xy: 240, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/idle
+  rotate: false
+  xy: 274, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/run
+  rotate: false
+  xy: 308, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/run
+  rotate: false
+  xy: 342, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/run
+  rotate: false
+  xy: 342, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+player/run
+  rotate: false
+  xy: 376, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/run
+  rotate: false
+  xy: 376, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+player/run
+  rotate: false
+  xy: 410, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/run
+  rotate: false
+  xy: 410, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+player/run
+  rotate: false
+  xy: 444, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5

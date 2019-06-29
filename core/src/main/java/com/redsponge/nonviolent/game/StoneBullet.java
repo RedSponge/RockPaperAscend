@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.redsponge.redengine.light.Light;
+import com.redsponge.redengine.light.PointLight;
 import com.redsponge.redengine.physics.IUpdated;
 import com.redsponge.redengine.physics.PActor;
 import com.redsponge.redengine.physics.PhysicsWorld;
@@ -18,6 +20,7 @@ public class StoneBullet extends PActor implements IUpdated {
     private float timeLeft;
     private float speed;
     private Player player;
+    private Light light;
 
     public StoneBullet(PhysicsWorld worldIn, IntVector2 pos, Vector2 vel, Player player) {
         super(worldIn);
@@ -29,6 +32,9 @@ public class StoneBullet extends PActor implements IUpdated {
         speed = 500;
 
         timeLeft = 1;
+
+        light = new PointLight(pos.x + size.x / 2, pos.y + size.y / 2, 100);
+        GameScreen.lightSystemS.addLight(light);
     }
 
     @Override
@@ -49,13 +55,15 @@ public class StoneBullet extends PActor implements IUpdated {
         }
 
         checkIfKilled();
+
+        light.getPosition().set(pos.x + size.x / 2, pos.y + size.y / 2);
     }
 
     private void checkIfKilled() {
         for (Enemy enemy : ((RPSWorld) worldIn).getScissors()) {
             if(MathUtilities.rectanglesIntersect(pos, size, enemy.pos, enemy.size)) {
                 Logger.log(this, "Removed Scissors!");
-                enemy.remove();
+                enemy.kill();
                 this.remove();
                 return;
             }
@@ -74,5 +82,11 @@ public class StoneBullet extends PActor implements IUpdated {
         float h = sprite.getRegionHeight();
         float angle = MathUtils.atan2(vel.y, vel.x) * MathUtils.radDeg;
         batch.draw(sprite, pos.x - w / 2 + size.x / 2f, pos.y - h / 2 + size.y / 2f, w / 2, h / 2, w, h, 1, 1, angle - 90);
+    }
+
+    @Override
+    protected void remove() {
+        super.remove();
+        GameScreen.lightSystemS.removeLight(light);
     }
 }

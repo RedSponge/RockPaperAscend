@@ -17,7 +17,7 @@ public enum MoveType {
     SCISSORS(0) {
         @Override
         public Enemy create(RPSWorld world, Player player, int x, int y) {
-            return new EnemyScissors(world, player, x, y, 300);
+            return new EnemyScissors(world, player, x, y, 200);
         }
     }
 

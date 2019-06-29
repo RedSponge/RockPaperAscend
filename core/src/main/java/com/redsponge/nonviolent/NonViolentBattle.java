@@ -22,6 +22,6 @@ public class NonViolentBattle extends EngineGame {
     public void init() {
         instance = this;
 //        DesktopUtil.toggleFullscreen(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
-        setScreen(new GameScreen(ga));
+        setScreen(new SplashScreenScreen(ga, new MenuScreen(ga), TransitionTemplates.sineSlide(1)));
     }
 }

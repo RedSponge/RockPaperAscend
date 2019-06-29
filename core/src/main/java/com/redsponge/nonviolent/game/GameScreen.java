@@ -7,21 +7,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.redsponge.nonviolent.Constants;
 import com.redsponge.nonviolent.Utils;
 import com.redsponge.redengine.assets.Asset;
+import com.redsponge.redengine.assets.Fonts;
+import com.redsponge.redengine.light.LightSystem;
 import com.redsponge.redengine.physics.PhysicsDebugRenderer;
 import com.redsponge.redengine.screen.AbstractScreen;
 import com.redsponge.redengine.transitions.TransitionTemplates;
@@ -36,6 +35,7 @@ public class GameScreen extends AbstractScreen {
     private PhysicsDebugRenderer pdr;
 
     private FitViewport viewport;
+    private FitViewport lightViewport;
     private Vector3 temp;
 
     private float timeUntilSpawn;
@@ -47,9 +47,20 @@ public class GameScreen extends AbstractScreen {
     private TextureAtlas gameTextures;
 
     public static Animation<TextureRegion> scissorsAnimation;
+    public static Animation<TextureRegion> scissorsAscend;
+
     public static Animation<TextureRegion> paperAnimation;
-    public static Animation<TextureRegion> rockAnimation;
+    public static Animation<TextureRegion> paperAscend;
     public static Animation<TextureRegion> paperAttackAnimation;
+
+    public static Animation<TextureRegion> rockAnimation;
+    public static Animation<TextureRegion> rockAscend;
+
+    public static Animation<TextureRegion> playerIdleAnimation;
+    public static Animation<TextureRegion> playerRunAnimation;
+    public static Animation<TextureRegion> playerAscend;
+
+    public static Animation<TextureRegion> ascendedGhostAnimation;
 
     @Asset(path = "particles/particles.atlas")
     private TextureAtlas particleTextures;
@@ -66,6 +77,13 @@ public class GameScreen extends AbstractScreen {
     private Sound scissorsAttackSound;
     public static Sound scissorsAttackSoundS;
 
+    @Asset(path = "sounds/ascend.wav")
+    private Sound ascendSound;
+    public static Sound ascendSoundS;
+
+    @Asset(path = "sounds/player_hit.wav")
+    private Sound playerHitSound;
+    public static Sound playerHitSoundS;
 
     private ParticleEffect paperSplash;
 
@@ -78,12 +96,28 @@ public class GameScreen extends AbstractScreen {
 
     private boolean transitioned;
 
+    @Asset(path = "light/point_light.png")
+    private Texture pointLight;
+
+    private LightSystem lightSystem;
+    public static LightSystem lightSystemS;
+    private TextureRegion lightTexture;
+
+    private DelayedRemovalArray<AscendedSoul> ascendedSouls;
+
+    private FitViewport guiViewport;
+
+    private TextureRegion soulIcon;
+
     public static final IntVector2[] SPAWN_POSITIONS = {
         new IntVector2(50, 50),
         new IntVector2(50, Constants.GAME_HEIGHT - 50),
         new IntVector2(Constants.GAME_WIDTH - 50, Constants.GAME_HEIGHT - 50),
         new IntVector2(Constants.GAME_WIDTH - 50, 50)
     };
+
+    public static DelayedRemovalArray<AscendedSoul> ascendedSoulsS;
+    public static int soulsAscended = 0;
 
 
     public GameScreen(GameAccessor ga) {
@@ -94,18 +128,26 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         loadAnimations();
 
-        viewport = new FitViewport(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
+        viewport = new FitViewport(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT  / 2);
         viewport.apply(true);
+
+        lightViewport = new FitViewport(viewport.getWorldWidth(), viewport.getWorldHeight());
+        guiViewport = new FitViewport(Constants.GUI_WIDTH, Constants.GUI_HEIGHT);
+        lightSystem = new LightSystem(batch, assets, lightViewport);
+        lightSystem.setAmbianceColor(Color.BLUE.cpy().add(0.5f, 0.5f, 0.5f, 0));
+        lightTexture = new TextureRegion();
+
+        lightSystemS = lightSystem;
 
         world = new RPSWorld();
         player = new Player(world);
         player.pos.set((int) viewport.getWorldWidth() / 2, (int) viewport.getWorldHeight() / 2);
         world.addActor(player);
 
-        world.addSolid(new Wall(world, 0, 0, 1, (int) viewport.getWorldHeight()));
-        world.addSolid(new Wall(world, 0, (int) viewport.getWorldHeight() - 1, (int) viewport.getWorldWidth(), 1));
-        world.addSolid(new Wall(world, 0, 0, (int) viewport.getWorldWidth(), 1));
-        world.addSolid(new Wall(world, (int) (viewport.getWorldWidth() - 1), 0, 1, (int) viewport.getWorldHeight()));
+        world.addSolid(new Wall(world, 0, 0, 1, Constants.GAME_HEIGHT));
+        world.addSolid(new Wall(world, 0, Constants.GAME_HEIGHT - 1, Constants.GAME_WIDTH, 1));
+        world.addSolid(new Wall(world, 0, 0, Constants.GAME_WIDTH, 1));
+        world.addSolid(new Wall(world, Constants.GAME_WIDTH - 1, 0, 1, Constants.GAME_HEIGHT));
 
         pdr = new PhysicsDebugRenderer();
         temp = new Vector3();
@@ -119,25 +161,48 @@ public class GameScreen extends AbstractScreen {
         paperAttackSoundS = paperAttackSound;
         rockAttackSoundS = rockAttackSound;
         scissorsAttackSoundS = scissorsAttackSound;
+
+        ascendedSouls = new DelayedRemovalArray<AscendedSoul>();
+        ascendedSoulsS = ascendedSouls;
+
+        ascendSoundS = ascendSound;
+        playerHitSoundS = playerHitSound;
     }
 
     private void loadAnimations() {
         scissorsAnimation = Utils.parseAnimation(gameTextures, "enemy/scissors/run", 1, 4, 0.1f, PlayMode.LOOP);
+        scissorsAscend = Utils.parseAnimation(gameTextures, "enemy/scissors/ascend", 1, 5, 0.1f, PlayMode.NORMAL);
+
         rockAnimation = Utils.parseAnimation(gameTextures, "enemy/rock/run", 1, 4,0.25f, PlayMode.LOOP);
+        rockAscend = Utils.parseAnimation(gameTextures, "enemy/rock/ascend", 1, 5,0.1f, PlayMode.NORMAL);
+
         paperAnimation = Utils.parseAnimation(gameTextures, "enemy/paper/run", 1, 4, 0.1f, PlayMode.LOOP);
         paperAttackAnimation = Utils.parseAnimation(gameTextures, "enemy/paper/attack", 1, 7, 0.1f, PlayMode.LOOP);
+        paperAscend = Utils.parseAnimation(gameTextures, "enemy/paper/ascend", 1, 5,0.1f, PlayMode.NORMAL);
+
         stoneBulletTexture = gameTextures.findRegion("enemy/rock/bullet");
-        playerIcon = gameTextures.findRegion("player");
+
+        playerIdleAnimation = Utils.parseAnimation(gameTextures, "player/idle", 1, 2, 0.4f, PlayMode.LOOP);
+        playerRunAnimation = Utils.parseAnimation(gameTextures, "player/run", 1, 8, 0.05f, PlayMode.LOOP);
+        playerAscend = Utils.parseAnimation(gameTextures, "player/ascend", 1, 4, 0.1f, PlayMode.NORMAL);
+
+        ascendedGhostAnimation = Utils.parseAnimation(gameTextures, "ascended_soul", 1, 3, 0.1f, PlayMode.LOOP);
+
+        soulIcon = gameTextures.findRegion("ascended_soul_icon");
     }
 
     @Override
     public void tick(float delta) {
-        world.update(delta);
-        timeUntilSpawn -= delta;
-        if(timeUntilSpawn <= 0) {
-            IntVector2 spawn = getSpawnPosition();
-            world.addActor(getBestSpawnChoice().create(world, player, spawn.x, spawn.y));
-            timeUntilSpawn = 2;
+        if(!player.dead) {
+            world.update(delta);
+            timeUntilSpawn -= delta;
+            if (timeUntilSpawn <= 0) {
+                IntVector2 spawn = getSpawnPosition();
+                world.addActor(getBestSpawnChoice().create(world, player, spawn.x, spawn.y));
+                timeUntilSpawn = 2;
+            }
+        } else {
+            player.update(delta);
         }
 
         for (PooledEffect runningEffect : runningEffects) {
@@ -148,9 +213,13 @@ public class GameScreen extends AbstractScreen {
             }
         }
 
-        if((player.dead || Gdx.input.isKeyPressed(Keys.ESCAPE)) && transitioned) {
+        if((player.dead && Gdx.input.isKeyPressed(Keys.R)) && transitioned) {
             ga.transitionTo(new GameScreen(ga), TransitionTemplates.linearFade(1));
             transitioned = false;
+        }
+
+        for (AscendedSoul ascendedSoul : ascendedSouls) {
+            ascendedSoul.tick(delta);
         }
     }
 
@@ -186,7 +255,7 @@ public class GameScreen extends AbstractScreen {
             paperChance += 80;
         }
         if(numSciss > 6) {
-            scissChance -= 80;
+            scissChance -= 200;
         }
 
         return Utils.getByChance(MoveType.values(), new int[] {rockChance, paperChance, scissChance});
@@ -197,23 +266,30 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float zoom = 0.6f;
+        float zoom = 1;
+        if(player.dead) {
+            zoom = Interpolation.pow5Out.apply(1, 0.5f,  Math.min(player.timeSinceAscension / 3, 1));
+        }
         ((OrthographicCamera)viewport.getCamera()).zoom = zoom;
         Vector3 camPos = viewport.getCamera().position;
-        camPos.lerp(new Vector3(player.pos.x, player.pos.y, 0), 0.1f);
+        camPos.set(player.pos.x, player.pos.y, 0);
 
-        if(camPos.x < viewport.getWorldWidth() / 2 * zoom) {
-            camPos.x = viewport.getWorldWidth() / 2 * zoom;
+        float minX = viewport.getWorldWidth() / 2 * zoom;
+        float maxX = Constants.GAME_WIDTH - viewport.getWorldWidth() / 2 * zoom;
+        if(camPos.x < minX) {
+            camPos.x = minX;
         }
-        else if(camPos.x > (viewport.getWorldWidth() - viewport.getWorldWidth() / 2 * zoom)) {
-            camPos.x = viewport.getWorldWidth() - viewport.getWorldWidth() / 2 * zoom;
+        else if(camPos.x > maxX) {
+            camPos.x = maxX;
         }
 
-        if(camPos.y < viewport.getWorldHeight() / 2 * zoom) {
-            camPos.y = viewport.getWorldHeight() / 2 * zoom;
+        float minY = viewport.getWorldHeight() / 2 * zoom;
+        float maxY = Constants.GAME_HEIGHT - viewport.getWorldHeight() / 2 * zoom;
+        if(camPos.y < minY) {
+            camPos.y = minY;
         }
-        else if(camPos.y > (viewport.getWorldHeight() - viewport.getWorldHeight() / 2 * zoom)) {
-            camPos.y = viewport.getWorldHeight() - viewport.getWorldHeight() / 2 * zoom;
+        else if(camPos.y > maxY) {
+            camPos.y = maxY;
         }
 
         viewport.apply();
@@ -222,7 +298,10 @@ public class GameScreen extends AbstractScreen {
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
-        batch.draw(grassBackground, 0,0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        batch.draw(grassBackground, 0,0, Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
+        for (AscendedSoul ascendedSoul : ascendedSouls) {
+            ascendedSoul.render(batch);
+        }
         for (Enemy enemy : world.getEnemies()) {
             enemy.render(batch);
         }
@@ -235,26 +314,47 @@ public class GameScreen extends AbstractScreen {
         }
         batch.end();
 
-//        pdr.render(world, viewport.getCamera().combined);
+        lightSystem.render();
 
-        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        lightTexture.setRegion(lightSystem.getLightMap());
+        lightTexture.flip(false, true);
 
-        shapeRenderer.begin(ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        for (Enemy paper : world.getPapers()) {
-            Rectangle attack = paper.getAttackRectangle();
-            if(attack != null) {
-                shapeRenderer.rect(attack.x, attack.y, attack.width, attack.height);
-            }
+        lightViewport.apply();
+        batch.setProjectionMatrix(lightViewport.getCamera().combined);
+        batch.setBlendFunction(GL20.GL_ZERO, GL20.GL_SRC_COLOR);
+        batch.begin();
+        batch.draw(lightTexture, 0, 0);
+        batch.end();
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        renderGUI();
+    }
+
+    private void renderGUI() {
+        guiViewport.apply();
+        batch.setProjectionMatrix(guiViewport.getCamera().combined);
+
+        batch.begin();
+        batch.draw(soulIcon, 8, guiViewport.getWorldHeight() - 40, 32, 32);
+        Fonts.pixelMix16.draw(batch, "" + soulsAscended, 40, guiViewport.getWorldHeight() - 16);
+
+        if(player.dead) {
+            Color c = new Color(1, 1, 1, Math.min(player.timeSinceAscension / 3, 1));
+            Fonts.pixelMix32.setColor(c);
+            Fonts.pixelMix16.setColor(c);
+            Fonts.pixelMix32.draw(batch, "You have ascended!", 0, 100, guiViewport.getWorldWidth(), Align.center, true);
+            Fonts.pixelMix16.draw(batch, "Press R To Play Again", 0, 50, guiViewport.getWorldWidth(), Align.center, true);
+            Fonts.pixelMix16.setColor(Color.WHITE);
+            Fonts.pixelMix32.setColor(Color.WHITE);
         }
-        shapeRenderer.end();
-
-
+        batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        lightViewport.update(width, height, true);
+        guiViewport.update(width, height, true);
     }
 
     @Override
@@ -264,5 +364,7 @@ public class GameScreen extends AbstractScreen {
             runningEffect.free();
         }
         runningEffects.clear();
+        lightSystem.dispose();
+        ascendedSouls.clear();
     }
 }

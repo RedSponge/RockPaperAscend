@@ -9,4 +9,6 @@ public class Constants {
 
     public static final Rectangle GAME_BOUNDS = new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
+    public static final int GUI_WIDTH = 640;
+    public static final int GUI_HEIGHT = 360;
 }

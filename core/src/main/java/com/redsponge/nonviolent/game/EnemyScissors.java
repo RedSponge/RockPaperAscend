@@ -1,5 +1,7 @@
 package com.redsponge.nonviolent.game;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -17,7 +19,7 @@ public class EnemyScissors extends Enemy {
     private float timeToPlay;
 
     private static final float MAX_TIME_TO_PLAY = 0.3f;
-    private static final int ATTACK_SOUND_PLAY_MIN_DST = 500;
+    private static final int ATTACK_SOUND_PLAY_MIN_DST = 300;
 
 
     public EnemyScissors(PhysicsWorld worldIn, Player player, int x, int y, float speed) {
@@ -33,7 +35,7 @@ public class EnemyScissors extends Enemy {
     }
 
     @Override
-    public void update(float delta) {
+    public void additionalUpdate(float delta) {
         timeAlive += delta;
         timeToPlay -= delta;
         self.set(pos.x + size.x / 2, pos.y + size.y / 2);
@@ -62,7 +64,7 @@ public class EnemyScissors extends Enemy {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void additionalRender(SpriteBatch batch) {
         TextureRegion frame = GameScreen.scissorsAnimation.getKeyFrame(timeAlive);
         float w = frame.getRegionWidth() * 2;
         float h = frame.getRegionHeight() * 2;
@@ -77,5 +79,15 @@ public class EnemyScissors extends Enemy {
 
     private void updateRepresentation() {
         representingRectangle.set(pos.x, pos.y, size.x, size.y);
+    }
+
+    @Override
+    public Color getRepresentingColor() {
+        return Color.GOLDENROD;
+    }
+
+    @Override
+    public Animation<TextureRegion> getAscendAnimation() {
+        return GameScreen.scissorsAscend;
     }
 }
