@@ -44,7 +44,7 @@ public class MenuScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/the_ascending_fountain.wav"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/the_ascending_fountain.ogg"));
         music.play();
         music.setLooping(true);
 

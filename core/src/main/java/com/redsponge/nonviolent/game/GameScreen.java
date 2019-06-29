@@ -133,7 +133,7 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         loadAnimations();
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/match_making.wav"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/match_making.ogg"));
         music.setLooping(true);
         music.play();
 

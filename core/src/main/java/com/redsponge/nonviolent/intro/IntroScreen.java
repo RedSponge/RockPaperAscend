@@ -52,7 +52,7 @@ public class IntroScreen extends AbstractScreen {
 
         timeSinceEnd = 10;
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/once_upon_a_hand.wav"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/once_upon_a_hand.ogg"));
         music.setOnCompletionListener(music -> loadNewFrame());
         music.play();
 
