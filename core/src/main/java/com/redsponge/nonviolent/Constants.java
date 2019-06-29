@@ -11,4 +11,7 @@ public class Constants {
 
     public static final int GUI_WIDTH = 640;
     public static final int GUI_HEIGHT = 360;
+
+    public static final float INTRO_WIDTH = 1280;
+    public static final float INTRO_HEIGHT = 720;
 }

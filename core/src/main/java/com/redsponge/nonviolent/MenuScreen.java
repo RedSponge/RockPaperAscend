@@ -1,6 +1,8 @@
 package com.redsponge.nonviolent;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -34,12 +36,17 @@ public class MenuScreen extends AbstractScreen {
 
     private BitmapFont titleFont;
 
+    private Music music;
+
     public MenuScreen(GameAccessor ga) {
         super(ga);
     }
 
     @Override
     public void show() {
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/the_ascending_fountain.wav"));
+        music.play();
+        music.setLooping(true);
 
         titleFont = new BitmapFont(Gdx.files.internal("fonts/title_font.fnt"));
 
@@ -64,6 +71,7 @@ public class MenuScreen extends AbstractScreen {
             }
             actor.addAction(Actions.sequence(action, Actions.run(() -> toRemove--), Actions.removeActor()));
         }
+        Gdx.input.setInputProcessor(null);
     }
 
     private void buildCredits() {
@@ -154,7 +162,8 @@ public class MenuScreen extends AbstractScreen {
     @Override
     public void tick(float delta) {
         stage.act(delta);
-        if(toRemove == 0 && nextMenu != null) {
+        if(stage.getActors().size == 0 && nextMenu != null) {
+            Gdx.input.setInputProcessor(stage);
             nextMenu.run();
             nextMenu = null;
         }
@@ -171,7 +180,12 @@ public class MenuScreen extends AbstractScreen {
         batch.draw(background, 0, 0);
         float w = ascend.getWidth() * 3;
         float h = ascend.getHeight() * 3;
-        batch.draw(ascend, viewport.getWorldWidth() / 2 - w / 2, 250, w, h);
+        titleFont.setColor(Color.BLACK);
+        titleFont.getData().setScale(0.5f);
+        titleFont.draw(batch, "Rock!", viewport.getWorldWidth() / 2 - w / 4 - 70, 350);
+        titleFont.draw(batch, "Paper!", viewport.getWorldWidth() / 2 + w / 4 - 40, 350);
+
+        batch.draw(ascend, viewport.getWorldWidth() / 2 - w / 2, 240, w, h);
         batch.end();
 
         stage.draw();
@@ -186,5 +200,6 @@ public class MenuScreen extends AbstractScreen {
     public void dispose() {
         skin.dispose();
         titleFont.dispose();
+        music.dispose();
     }
 }

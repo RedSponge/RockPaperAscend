@@ -2,6 +2,7 @@ package com.redsponge.nonviolent.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.redsponge.nonviolent.Constants;
+import com.redsponge.nonviolent.MenuScreen;
 import com.redsponge.nonviolent.Utils;
 import com.redsponge.redengine.assets.Asset;
 import com.redsponge.redengine.assets.Fonts;
@@ -108,6 +110,7 @@ public class GameScreen extends AbstractScreen {
     private FitViewport guiViewport;
 
     private TextureRegion soulIcon;
+    private Music music;
 
     public static final IntVector2[] SPAWN_POSITIONS = {
         new IntVector2(50, 50),
@@ -127,6 +130,10 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void show() {
         loadAnimations();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/match_making.wav"));
+        music.setLooping(true);
+        music.play();
 
         viewport = new FitViewport(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT  / 2);
         viewport.apply(true);
@@ -199,9 +206,12 @@ public class GameScreen extends AbstractScreen {
             if (timeUntilSpawn <= 0) {
                 IntVector2 spawn = getSpawnPosition();
                 world.addActor(getBestSpawnChoice().create(world, player, spawn.x, spawn.y));
-                timeUntilSpawn = 2;
+                timeUntilSpawn = 5;
             }
         } else {
+            if(music.isPlaying()) {
+                music.stop();
+            }
             player.update(delta);
         }
 
@@ -213,9 +223,14 @@ public class GameScreen extends AbstractScreen {
             }
         }
 
-        if((player.dead && Gdx.input.isKeyPressed(Keys.R)) && transitioned) {
-            ga.transitionTo(new GameScreen(ga), TransitionTemplates.linearFade(1));
-            transitioned = false;
+        if((player.dead && transitioned)) {
+            if(Gdx.input.isKeyJustPressed(Keys.R)) {
+                ga.transitionTo(new GameScreen(ga), TransitionTemplates.linearFade(1));
+                transitioned = false;
+            } else if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+                ga.transitionTo(new MenuScreen(ga), TransitionTemplates.linearFade(1));
+                transitioned = false;
+            }
         }
 
         for (AscendedSoul ascendedSoul : ascendedSouls) {
@@ -344,6 +359,7 @@ public class GameScreen extends AbstractScreen {
             Fonts.pixelMix16.setColor(c);
             Fonts.pixelMix32.draw(batch, "You have ascended!", 0, 100, guiViewport.getWorldWidth(), Align.center, true);
             Fonts.pixelMix16.draw(batch, "Press R To Play Again", 0, 50, guiViewport.getWorldWidth(), Align.center, true);
+            Fonts.pixelMix16.draw(batch, "Press ESC To Go Back To Menu", 0, 20, guiViewport.getWorldWidth(), Align.center, true);
             Fonts.pixelMix16.setColor(Color.WHITE);
             Fonts.pixelMix32.setColor(Color.WHITE);
         }
@@ -366,5 +382,6 @@ public class GameScreen extends AbstractScreen {
         runningEffects.clear();
         lightSystem.dispose();
         ascendedSouls.clear();
+        music.dispose();
     }
 }
