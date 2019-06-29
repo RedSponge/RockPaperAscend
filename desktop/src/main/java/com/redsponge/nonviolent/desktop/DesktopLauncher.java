@@ -18,7 +18,7 @@ public class DesktopLauncher {
 
     private static LwjglApplicationConfiguration getDefaultConfiguration() {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
-        configuration.title = "Rock Paper Ascension";
+        configuration.title = "Rock Paper Ascend";
         configuration.width = 1280;
         configuration.height = 720;
         for (int size : new int[] { 128, 64, 32, 16 }) {
