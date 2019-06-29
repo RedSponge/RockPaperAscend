@@ -9,10 +9,10 @@ public class IntroText {
             new IntroText("", "{SLOW}The Rocks. {WAIT}The Papers. {WAIT}And The Scissors."),
             new IntroText("", "{SLOW}They lived in peace for thousands of years{WAIT}.{WAIT}.{WAIT}.{WAIT}"),
             new IntroText("", "{SLOWER}Until one day, A species of aliens, who took upon them the task of spreading the knowledge of ascension, landed on Handia"),
-            new IntroText("", "{SLOW}Ascension is the process of freeing one's soul from their body, and freeing it"),
-            new IntroText("", "{SLOW}The way to ascend, the aliens said, is to come in contact with your perfect match."),
+            new IntroText("", "{SLOW}Ascension is the process of separating one's soul from their body, and freeing it"),
+            new IntroText("", "{SLOW}In order to ascend, the aliens said, A conflict must be solved by one's perfect match."),
             new IntroText("", "{SLOW}Since the citizens of Handia, the Hands, didn't know their matches, the aliens sent someone to direct them."),
-            new IntroText("", "{SLOW}And this is where you, come into play. You shall direct the Hands one into another, and help them ascend."),
+            new IntroText("", "{SLOW}And this is where you, come into play.{WAIT} You shall direct the Hands one into another, and help them ascend."),
             new IntroText("", "{SLOW}Remember though, you MUST not ascend with them, as we have more worlds to help after that"),
     };
 

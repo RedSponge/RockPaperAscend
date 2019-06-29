@@ -1,10 +1,7 @@
 package com.redsponge.nonviolent;
 
-import com.redsponge.nonviolent.game.GameScreen;
 import com.redsponge.nonviolent.intro.IntroScreen;
 import com.redsponge.redengine.EngineGame;
-import com.redsponge.redengine.desktop.DesktopUtil;
-import com.redsponge.redengine.screen.DefaultScreen;
 import com.redsponge.redengine.screen.SplashScreenScreen;
 import com.redsponge.redengine.transitions.TransitionTemplates;
 
@@ -23,6 +20,6 @@ public class NonViolentBattle extends EngineGame {
     public void init() {
         instance = this;
 //        DesktopUtil.toggleFullscreen(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
-        setScreen(new SplashScreenScreen(ga, new IntroScreen(ga), TransitionTemplates.sineSlide(1)));
+        setScreen(new MySplashScreenScreen(ga, TransitionTemplates.sineSlide(3)));
     }
 }

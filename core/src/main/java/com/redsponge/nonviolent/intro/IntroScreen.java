@@ -5,12 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.redsponge.nonviolent.Constants;
 import com.redsponge.nonviolent.MenuScreen;
 import com.redsponge.nonviolent.game.GameScreen;
+import com.redsponge.redengine.assets.Asset;
 import com.redsponge.redengine.assets.Fonts;
 import com.redsponge.redengine.screen.AbstractScreen;
 import com.redsponge.redengine.transitions.TransitionTemplates;
@@ -25,12 +28,20 @@ public class IntroScreen extends AbstractScreen {
     private Music music;
     private boolean transitioned;
 
+    private TextureAtlas introAtlas;
+    private TextureRegion[] introPieces;
+
     public IntroScreen(GameAccessor ga) {
         super(ga);
     }
 
     @Override
     public void show() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         viewport = new FitViewport(Constants.INTRO_WIDTH, Constants.INTRO_HEIGHT);
         currentFrame = -1;
 
@@ -44,6 +55,14 @@ public class IntroScreen extends AbstractScreen {
         music = Gdx.audio.newMusic(Gdx.files.internal("music/once_upon_a_hand.wav"));
         music.setOnCompletionListener(music -> loadNewFrame());
         music.play();
+
+        introAtlas = new TextureAtlas(Gdx.files.internal("intro/intro.atlas"));
+        introPieces = new TextureRegion[IntroText.INTROES.length];
+
+        for (int i = 0; i < introPieces.length; i++) {
+            introPieces[i] = introAtlas.findRegion("intro", i + 1);
+        }
+        System.out.println("LOAD!");
     }
 
     @Override
@@ -53,7 +72,7 @@ public class IntroScreen extends AbstractScreen {
         }
 
         typingLabel.act(delta);
-        if(typingLabel.hasEnded()) {
+        if(typingLabel.hasEnded() || currentFrame == -1) {
             timeSinceEnd += delta;
             if(timeSinceEnd > 3) {
                 timeSinceEnd = 0;
@@ -93,7 +112,11 @@ public class IntroScreen extends AbstractScreen {
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
+        TextureRegion frame = introPieces[Math.min(currentFrame, introPieces.length - 1)];
+        float w = frame.getRegionWidth() * 4;
+        float h = frame.getRegionHeight() * 4;
         typingLabel.draw(batch, 1);
+        batch.draw(frame, viewport.getWorldWidth() / 2 - w / 2, 200, w, h);
         batch.end();
     }
 
