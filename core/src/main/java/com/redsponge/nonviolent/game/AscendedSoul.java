@@ -1,6 +1,7 @@
 package com.redsponge.nonviolent.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +18,7 @@ public class AscendedSoul {
     private float floatUpTime;
 
     private FlickeringPointLight light;
+    private ParticleEffectPool.PooledEffect effect;
 
     public static final Color COLOR = Color.YELLOW.cpy().add(0, 0, 0.8f, 0);
 
@@ -30,6 +32,10 @@ public class AscendedSoul {
         light.setColor(COLOR);
 
         GameScreen.lightSystemS.addLight(light);
+        effect = GameScreen.soulPool.obtain();
+        effect.setPosition(pos.x, pos.y);
+        effect.start();
+        GameScreen.runningEffects.add(effect);
     }
 
     public void tick(float delta) {
@@ -42,6 +48,7 @@ public class AscendedSoul {
         }
         light.getPosition().set(pos.x, pos.y);
         light.update(delta);
+        effect.setPosition(pos.x, pos.y);
     }
 
     public void render(SpriteBatch batch) {
@@ -54,6 +61,8 @@ public class AscendedSoul {
     public void remove() {
         GameScreen.ascendedSoulsS.removeValue(this, true);
         GameScreen.lightSystemS.removeLight(light);
+        effect.free();
+        GameScreen.runningEffects.removeValue(effect, true);
     }
 
 }

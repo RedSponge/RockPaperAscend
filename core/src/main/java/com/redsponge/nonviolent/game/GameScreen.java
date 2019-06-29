@@ -88,8 +88,10 @@ public class GameScreen extends AbstractScreen {
     public static Sound playerHitSoundS;
 
     private ParticleEffect paperSplash;
+    private ParticleEffect soul;
 
     public static ParticleEffectPool paperSplashPool;
+    public static ParticleEffectPool soulPool;
 
     public static TextureRegion stoneBulletTexture;
     public static TextureRegion playerIcon;
@@ -162,7 +164,13 @@ public class GameScreen extends AbstractScreen {
 
         paperSplash = new ParticleEffect();
         paperSplash.load(Gdx.files.internal("particles/paper_explosion.p"), particleTextures);
+
+        soul = new ParticleEffect();
+        soul.load(Gdx.files.internal("particles/soul.p"), particleTextures);
+
         paperSplashPool = new ParticleEffectPool(paperSplash, 20, 100);
+        soulPool = new ParticleEffectPool(soul, 20, 100);
+
         transitioned = true;
 
         paperAttackSoundS = paperAttackSound;
@@ -376,6 +384,7 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         paperSplash.dispose();
+        soul.dispose();
         for (PooledEffect runningEffect : runningEffects) {
             runningEffect.free();
         }

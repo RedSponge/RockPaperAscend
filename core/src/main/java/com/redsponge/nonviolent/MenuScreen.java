@@ -180,12 +180,13 @@ public class MenuScreen extends AbstractScreen {
         batch.draw(background, 0, 0);
         float w = ascend.getWidth() * 3;
         float h = ascend.getHeight() * 3;
+        batch.draw(ascend, viewport.getWorldWidth() / 2 - w / 2, 240, w, h);
+
         titleFont.setColor(Color.BLACK);
         titleFont.getData().setScale(0.5f);
         titleFont.draw(batch, "Rock!", viewport.getWorldWidth() / 2 - w / 4 - 70, 350);
         titleFont.draw(batch, "Paper!", viewport.getWorldWidth() / 2 + w / 4 - 40, 350);
 
-        batch.draw(ascend, viewport.getWorldWidth() / 2 - w / 2, 240, w, h);
         batch.end();
 
         stage.draw();
